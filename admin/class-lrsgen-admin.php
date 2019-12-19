@@ -203,12 +203,64 @@ class Lrsgen_Admin {
 				'capability_type'       => 'page',
 			)
 		);
+
+		// Create Reservations Post Type
+		register_post_type( 'room-type', 
+			array(
+				'label'                 => __( 'Room Types', 'text_domain' ),
+				'description'           => __( 'Post Type that holds reservation details', 'text_domain' ),
+				'labels'                => array(
+					'name'                  => _x( 'Room Types', 'Post Type General Name', 'text_domain' ),
+					'singular_name'         => _x( 'Room Type', 'Post Type Singular Name', 'text_domain' ),
+					'menu_name'             => __( 'Room Types', 'text_domain' ),
+					'name_admin_bar'        => __( 'Room Types', 'text_domain' ),
+					'archives'              => __( 'Room Type Archives', 'text_domain' ),
+					'attributes'            => __( 'Room Type Attributes', 'text_domain' ),
+					'parent_item_colon'     => __( 'Parent Room Type:', 'text_domain' ),
+					'all_items'             => __( 'All Room Types', 'text_domain' ),
+					'add_new_item'          => __( 'Add New Room Type', 'text_domain' ),
+					'add_new'               => __( 'Add New Room Type', 'text_domain' ),
+					'new_item'              => __( 'New Room Type', 'text_domain' ),
+					'edit_item'             => __( 'Edit Room Type', 'text_domain' ),
+					'update_item'           => __( 'Update Room Type', 'text_domain' ),
+					'view_item'             => __( 'View Room Type', 'text_domain' ),
+					'view_items'            => __( 'View Room Types', 'text_domain' ),
+					'search_items'          => __( 'Search Room Types', 'text_domain' ),
+					'not_found'             => __( 'Room Type Not found', 'text_domain' ),
+					'not_found_in_trash'    => __( 'Room Type Not found in Trash', 'text_domain' ),
+					'featured_image'        => __( 'Featured Image', 'text_domain' ),
+					'set_featured_image'    => __( 'Set featured image', 'text_domain' ),
+					'remove_featured_image' => __( 'Remove featured image', 'text_domain' ),
+					'use_featured_image'    => __( 'Use as featured image', 'text_domain' ),
+					'insert_into_item'      => __( 'Insert into Reservation', 'text_domain' ),
+					'uploaded_to_this_item' => __( 'Uploaded to this Reservation', 'text_domain' ),
+					'items_list'            => __( 'Reservations list', 'text_domain' ),
+					'items_list_navigation' => __( 'Reservations list navigation', 'text_domain' ),
+					'filter_items_list'     => __( 'Filter Reservations list', 'text_domain' ),
+				),
+				'supports'              => array( 'title', 'editor' ),
+				'hierarchical'          => false,
+				'public'                => true,
+				'show_ui'               => true,
+				'show_in_menu'          => true,
+				'menu_position'         => 20,
+				'menu_icon'             => 'dashicons-bed',
+				'show_in_admin_bar'     => true,
+				'show_in_nav_menus'     => false,
+				'can_export'            => true,
+				'has_archive'           => false,
+				'exclude_from_search'   => false,
+				'publicly_queryable'    => true,
+				'capability_type'       => 'page',
+			)
+		);
 	}
 
 	/**
-	 * 
+	 *  Add essential roles for the app to function correctly.
 	 */
 	public function createLRSGENRoles(){
+		
 		add_role(
 			'lrsgenUser',
 			'LRSGen User',
@@ -230,5 +282,30 @@ class Lrsgen_Admin {
 				'level_10' 	   => true
 			)
 		);
+	}
+
+	/**
+	 *  Add essential theme pages.
+	 */
+	public function createThemePages(){
+		$pagesToCreate = [ 'hotels', 'reservations', 'rates', 'login', 'new reservation', 'edit reservation', 'confirmation', 'new hotel', 'edit hotel', 'edit rates' ];
+
+		if(count($pagesToCreate) > 0){
+			foreach( $pagesToCreate as $pageID ){
+				$slug = sanitize_title_with_dashes($pageID);
+				$pageExists = Lrsgen::the_slug_exists($slug);
+				
+				if(!$pageExists){
+					$result = wp_insert_post(array(
+						'post_type' => 'page',
+						'post_title' => ucfirst($pageID),
+						'post_content' => '',
+						'post_status' => 'publish',
+						'post_author' => 1,
+						'post_slug' => $slug
+					));
+				}
+			}
+		}
 	}
 }

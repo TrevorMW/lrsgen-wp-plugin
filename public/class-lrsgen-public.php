@@ -73,7 +73,7 @@ class Lrsgen_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/lrsgen-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/lrsgen-public.css?v='. time(), array(), null, 'all' );
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Lrsgen_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
+	
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -95,7 +95,7 @@ class Lrsgen_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lrsgen-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lrsgen-public.js?v='. time(), array( 'jquery' ), $this->version, false );
 	}
 
 	/**
@@ -134,5 +134,4 @@ class Lrsgen_Public {
 
 		die(0);
 	}
-
 }

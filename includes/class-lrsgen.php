@@ -121,6 +121,38 @@ class Lrsgen {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-lrsgen-public.php';
 
+		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-acf-cpt.php';
+
+
+		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-hotel.php';
+
+		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-reservation.php';
+
+		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-rate.php';
+
+		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-room-type.php';
+
+
 		$this->loader = new Lrsgen_Loader();
 	}
 
@@ -154,6 +186,7 @@ class Lrsgen {
 
 		$this->loader->add_action( 'init', $plugin_admin, 'createPostTypes', 10 );
 		$this->loader->add_action( 'init', $plugin_admin, 'createLRSGENRoles', 20 );
+		$this->loader->add_action( 'init', $plugin_admin, 'createThemePages', 30 );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -177,10 +210,25 @@ class Lrsgen {
 		// Load scripts
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		
+	
 		// Handle login action
 		$this->loader->add_action( 'wp_ajax_lrsgen_login', 		  $plugin_public, 'loginLRSGENUser' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_lrsgen_login', $plugin_public, 'loginLRSGENUser' );
+
+		// Hotel Actions
+		$this->loader->add_action( 'displayHotels', Hotel, 'displayAllHotels' );
+
+		// Reservation Actions
+		$this->loader->add_action( 'displayReservations', Reservation, 'displayAllReservations' );
+
+		// Rate Actions
+		$this->loader->add_action( 'displayRates', Rate, 'displayRateTable' );
+
+		// Room Types Actions
+		$this->loader->add_action( 'displayRoomTypeHeaders', Room_Type, 'displayRoomTypeHeaders' );
+		$this->loader->add_action( 'roomTypesCount', Room_Type, 'getRoomTypeCount' );
+
+		
 	}
 
 	/**
@@ -222,6 +270,20 @@ class Lrsgen {
 	public function get_version() {
 		return $this->version;
 	}
-
+	
+	/**
+	 * Boolean check for page slug.
+	 *
+	 * @since     1.0.0
+	 * @return    string    The version number of the plugin.
+	 */
+	static function the_slug_exists($post_name) {
+		global $wpdb;
+		if($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . $post_name . "'", 'ARRAY_A')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 }
